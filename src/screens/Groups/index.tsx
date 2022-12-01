@@ -1,10 +1,9 @@
-import { SafeAreaView, Text } from 'react-native';
-import { styles } from './styles';
+import * as Styled from './styles';
 
 export const Groups = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>Groups</Text>
-    </SafeAreaView>
+    <Styled.Container>
+      <Styled.Title>Groups</Styled.Title>
+    </Styled.Container>
   );
 };
