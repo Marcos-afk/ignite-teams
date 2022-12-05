@@ -1,6 +1,8 @@
+import { useTheme } from 'styled-components/native';
 import { InputProps } from './InputProps';
 import * as Styled from './styles';
 
 export const Input = ({ ...rest }: InputProps) => {
-  return <Styled.Container {...rest}></Styled.Container>;
+  const { COLORS } = useTheme();
+  return <Styled.Container {...rest} placeholderTextColor={COLORS.GRAY_300}></Styled.Container>;
 };
