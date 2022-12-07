@@ -4,7 +4,7 @@ import { Highlight } from '@components/Highlight';
 import { Input } from '@components/Input';
 import * as Styled from './styles';
 
-export const NewGroup = () => {
+export const NewGroups = () => {
   return (
     <Styled.Container>
       <Header showBackButton />

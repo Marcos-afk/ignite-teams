@@ -1,5 +1,5 @@
 import { Loading } from '@components/Loading';
-import { NewGroup } from '@components/NewGroup';
+import { NewGroups } from '@screens/NewGroups';
 import { useFonts, Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto';
 import { Groups } from '@screens/Groups';
 import { THEME } from '@theme/index';
