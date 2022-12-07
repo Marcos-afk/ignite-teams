@@ -1,5 +1,7 @@
+import { ButtonIcon } from '@components/ButtonIcon';
 import { Header } from '@components/Header';
 import { Highlight } from '@components/Highlight';
+import { Input } from '@components/Input';
 import * as Styled from './styles';
 
 export const Players = () => {
@@ -7,6 +9,11 @@ export const Players = () => {
     <Styled.Container>
       <Header showBackButton />
       <Highlight title="Nome da turma" subtitle="adicione a galera e separe os times" />
+
+      <Styled.Form>
+        <Input placeholder="Nome do participante" autoCorrect={false} />
+        <ButtonIcon icon="add" />
+      </Styled.Form>
     </Styled.Container>
   );
 };

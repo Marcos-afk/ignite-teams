@@ -11,3 +11,11 @@ export const Content = styled.View`
   justify-content: center;
 
 `;
+
+export const Form = styled.View`
+  width: 100%;
+  background-color: ${({ theme }) => theme.COLORS.GRAY_700};
+  flex-direction: row;
+  justify-content: center;
+  border-radius: 6px;
+`;
