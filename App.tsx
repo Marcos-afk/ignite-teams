@@ -1,11 +1,9 @@
 import { Loading } from '@components/Loading';
-import { NewGroups } from '@screens/NewGroups';
 import { useFonts, Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto';
-import { Groups } from '@screens/Groups';
 import { THEME } from '@theme/index';
 import { StatusBar } from 'react-native';
 import { ThemeProvider } from 'styled-components';
-import { Players } from '@screens/Players';
+import { Routes } from '@routes/index';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -15,7 +13,7 @@ export default function App() {
 
   return (
     <ThemeProvider theme={THEME}>
-      {fontsLoaded ? <Players /> : <Loading />}
+      {fontsLoaded ? <Routes /> : <Loading />}
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
     </ThemeProvider>
   );
