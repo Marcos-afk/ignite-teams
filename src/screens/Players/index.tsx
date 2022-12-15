@@ -9,15 +9,19 @@ import * as Styled from './styles';
 import { PlayCard } from '@components/PlayCard';
 import { ListEmpty } from '@components/ListEmpty';
 import { Button } from '@components/Button';
+import { useRoute } from '@react-navigation/native';
+import { RouteParams } from './PlayersProps';
 
 export const Players = () => {
   const [team, setTeam] = useState('');
   const [players, setPlayers] = useState([]);
+  const route = useRoute();
+  const { group } = route.params as RouteParams;
 
   return (
     <Styled.Container>
       <Header showBackButton />
-      <Highlight title="Nome da turma" subtitle="adicione a galera e separe os times" />
+      <Highlight title={group} subtitle="adicione a galera e separe os times" />
 
       <Styled.Form>
         <Input placeholder="Nome do participante" autoCorrect={false} />
