@@ -5,11 +5,16 @@ import { Highlight } from '@components/Highlight';
 import { ListEmpty } from '@components/ListEmpty';
 import { useState } from 'react';
 import { FlatList } from 'react-native';
-import { mock } from './mock';
+import { useNavigation } from '@react-navigation/native';
 import * as Styled from './styles';
 
 export const Groups = () => {
   const [groups, setGroups] = useState<string[]>([]);
+  const { navigate } = useNavigation();
+
+  const handleNewGroup = () => {
+    navigate('new');
+  };
 
   return (
     <Styled.Container>
@@ -22,7 +27,7 @@ export const Groups = () => {
         contentContainerStyle={groups.length === 0 && { flex: 1 }}
         ListEmptyComponent={() => <ListEmpty message="Que tal cadastrar uma turma ?" />}
       />
-      <Button title="Criar nova turma" />
+      <Button title="Criar nova turma" onPress={handleNewGroup} />
     </Styled.Container>
   );
 };
