@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import { Button } from '@components/Button';
 import { GroupCard } from '@components/GroupCard';
 import { Header } from '@components/Header';
@@ -8,6 +9,7 @@ import { FlatList } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import * as Styled from './styles';
 import { findAllGroups } from '@storage/group/findAllGroups';
+import { AppError } from '@utils/AppError';
 
 export const Groups = () => {
   const [groups, setGroups] = useState<string[]>([]);
@@ -22,7 +24,11 @@ export const Groups = () => {
       const storage = await findAllGroups();
       setGroups(storage);
     } catch (error) {
-      console.log(error);
+      if (error instanceof AppError) {
+        Alert.alert('Erro ao buscar grupos', error.message);
+      } else {
+        Alert.alert('Erro ao buscar grupos', 'Não foi possível buscar grupos');
+      }
     }
   };
 

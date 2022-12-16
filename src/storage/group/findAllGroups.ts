@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GROUP_COLLECTION } from '@storage/storageConfig';
+import { AppError } from '@utils/AppError';
 
 export const findAllGroups = async () => {
   try {
@@ -7,6 +8,6 @@ export const findAllGroups = async () => {
     const groups: string[] = storage ? JSON.parse(storage) : [];
     return groups;
   } catch (error) {
-    throw error;
+    throw new AppError(`Ocorreu um error: ${error}`);
   }
 };

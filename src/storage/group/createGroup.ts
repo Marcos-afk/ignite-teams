@@ -15,6 +15,6 @@ export const createGroup = async (name: string) => {
     const storage = JSON.stringify([...groups, name]);
     await AsyncStorage.setItem(GROUP_COLLECTION, storage);
   } catch (error) {
-    throw error;
+    throw new AppError(`Ocorreu um error: ${error}`);
   }
 };
