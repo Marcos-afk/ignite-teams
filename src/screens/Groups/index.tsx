@@ -3,10 +3,11 @@ import { GroupCard } from '@components/GroupCard';
 import { Header } from '@components/Header';
 import { Highlight } from '@components/Highlight';
 import { ListEmpty } from '@components/ListEmpty';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import * as Styled from './styles';
+import { findAllGroups } from '@storage/group/findAllGroups';
 
 export const Groups = () => {
   const [groups, setGroups] = useState<string[]>([]);
@@ -15,6 +16,21 @@ export const Groups = () => {
   const handleNewGroup = () => {
     navigate('new');
   };
+
+  const getGroups = async () => {
+    try {
+      const storage = await findAllGroups();
+      setGroups(storage);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getGroups();
+    }, []),
+  );
 
   return (
     <Styled.Container>
