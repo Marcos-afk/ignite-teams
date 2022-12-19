@@ -29,7 +29,8 @@
     "@typescript-eslint/restrict-template-expressions": "off",
     "@typescript-eslint/no-floating-promises": "off",
     "no-useless-catch": "off",
-    "@typescript-eslint/no-misused-promises": "off"
+    "@typescript-eslint/no-misused-promises": "off",
+    "react-hooks/exhaustive-deps": "off"
   },
   "settings": {
     "react": {

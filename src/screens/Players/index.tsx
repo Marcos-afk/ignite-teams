@@ -1,5 +1,5 @@
 import { Alert } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ButtonIcon } from '@components/ButtonIcon';
 import { Filter } from '@components/Filter/indext';
 import { Header } from '@components/Header';
@@ -14,11 +14,12 @@ import { useRoute } from '@react-navigation/native';
 import { RouteParams } from './PlayersProps';
 import { AppError } from '@utils/AppError';
 import { createPlayerByGroup } from '@storage/players/createPlayerByGroup';
-import { findByAllPlayersByGroup } from '@storage/players/findAllPlayersByGroup';
+import { findAllPlayersByGroupAndTeam } from '@storage/players/findAllPlayersByGroupAndTeam';
+import { PlayerStorageDto } from '@storage/players/PlayerStorageDto';
 
 export const Players = () => {
-  const [team, setTeam] = useState('');
-  const [players, setPlayers] = useState([]);
+  const [team, setTeam] = useState('Time A');
+  const [players, setPlayers] = useState<PlayerStorageDto[]>([]);
   const [player, setPlayer] = useState('');
   const route = useRoute();
   const { group } = route.params as RouteParams;
@@ -28,10 +29,6 @@ export const Players = () => {
       return Alert.alert('Erro ao criar jogador', 'Digite o nome do jogador');
     }
 
-    if (team.trim().length === 0) {
-      return Alert.alert('Erro ao criar jogador', 'É preciso selecionar a qual time o jogador vai pertencer');
-    }
-
     const newPlayer = {
       name: player,
       team,
@@ -39,8 +36,7 @@ export const Players = () => {
 
     try {
       await createPlayerByGroup(newPlayer, group);
-      const players = await findByAllPlayersByGroup(group);
-      console.log(players);
+      await getPlayers();
     } catch (error) {
       if (error instanceof AppError) {
         Alert.alert('Erro ao criar jogador', error.message);
@@ -49,6 +45,23 @@ export const Players = () => {
       }
     }
   };
+
+  const getPlayers = async () => {
+    try {
+      const storage = await findAllPlayersByGroupAndTeam(group, team);
+      setPlayers(storage);
+    } catch (error) {
+      if (error instanceof AppError) {
+        Alert.alert('Erro ao buscar jogadores', error.message);
+      } else {
+        Alert.alert('Erro ao buscar jogadores', 'Não foi possível buscar jogadores');
+      }
+    }
+  };
+
+  useEffect(() => {
+    getPlayers();
+  }, [team]);
 
   return (
     <Styled.Container>
@@ -74,8 +87,8 @@ export const Players = () => {
 
       <FlatList
         data={players}
-        keyExtractor={(item) => item}
-        renderItem={({ item }) => <PlayCard name={item} onRemove={() => {}} />}
+        keyExtractor={(item) => item.name}
+        renderItem={({ item }) => <PlayCard name={item.name} onRemove={() => {}} />}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => <ListEmpty message="Que tal adicionar um novo usuário a esse time ?" />}
         contentContainerStyle={[{ paddingBottom: 100 }, players.length === 0 && { flex: 1 }]}
