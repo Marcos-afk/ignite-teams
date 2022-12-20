@@ -10,13 +10,14 @@ import * as Styled from './styles';
 import { PlayCard } from '@components/PlayCard';
 import { ListEmpty } from '@components/ListEmpty';
 import { Button } from '@components/Button';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { RouteParams } from './PlayersProps';
 import { AppError } from '@utils/AppError';
 import { createPlayerByGroup } from '@storage/players/createPlayerByGroup';
 import { findAllPlayersByGroupAndTeam } from '@storage/players/findAllPlayersByGroupAndTeam';
 import { PlayerStorageDto } from '@storage/players/PlayerStorageDto';
 import { deletePlayerByGroup } from '@storage/players/deletePlayerByGroup';
+import { removeGroupByName } from '@storage/group/removeGroupByName';
 
 export const Players = () => {
   const [team, setTeam] = useState('Time A');
@@ -25,6 +26,7 @@ export const Players = () => {
   const route = useRoute();
   const { group } = route.params as RouteParams;
   const newPlayerRef = useRef<TextInput>(null);
+  const { navigate } = useNavigation();
 
   const handleAddPlayer = async () => {
     if (player.trim().length === 0) {
@@ -72,6 +74,28 @@ export const Players = () => {
     }
   };
 
+  const RemoveGroup = async () => {
+    try {
+      await removeGroupByName(group);
+      navigate('groups');
+    } catch (error) {
+      Alert.alert('Erro ao apagar turma', 'Não foi possível apagar turma');
+    }
+  };
+
+  const handleRemoveGroup = () => {
+    Alert.alert('Remoção de turma', 'Deseja remover essa turma ?', [
+      {
+        text: 'Não',
+        style: 'cancel',
+      },
+      {
+        text: 'Sim',
+        onPress: () => RemoveGroup(),
+      },
+    ]);
+  };
+
   useEffect(() => {
     getPlayers();
   }, [team]);
@@ -115,7 +139,7 @@ export const Players = () => {
         contentContainerStyle={[{ paddingBottom: 100 }, players.length === 0 && { flex: 1 }]}
       />
 
-      <Button title="Remover turma" type="SECONDARY" />
+      <Button title="Remover turma" type="SECONDARY" onPress={handleRemoveGroup} />
     </Styled.Container>
   );
 };
