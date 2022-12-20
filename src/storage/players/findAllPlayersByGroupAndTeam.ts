@@ -1,8 +1,8 @@
-import { findByAllPlayersByGroup } from './findAllPlayersByGroup';
+import { findAllPlayersByGroup } from './findAllPlayersByGroup';
 
 export const findAllPlayersByGroupAndTeam = async (group: string, team: string) => {
   try {
-    const storage = await findByAllPlayersByGroup(group);
+    const storage = await findAllPlayersByGroup(group);
     return storage.filter((player) => player.team === team);
   } catch (error) {
     throw error;

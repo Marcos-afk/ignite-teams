@@ -16,6 +16,7 @@ import { AppError } from '@utils/AppError';
 import { createPlayerByGroup } from '@storage/players/createPlayerByGroup';
 import { findAllPlayersByGroupAndTeam } from '@storage/players/findAllPlayersByGroupAndTeam';
 import { PlayerStorageDto } from '@storage/players/PlayerStorageDto';
+import { deletePlayerByGroup } from '@storage/players/deletePlayerByGroup';
 
 export const Players = () => {
   const [team, setTeam] = useState('Time A');
@@ -62,6 +63,15 @@ export const Players = () => {
     }
   };
 
+  const handleRemovePlayer = async (player: string) => {
+    try {
+      await deletePlayerByGroup(player, group);
+      await getPlayers();
+    } catch (error) {
+      Alert.alert('Erro ao apagar jogador', 'Não foi possível apagar jogador');
+    }
+  };
+
   useEffect(() => {
     getPlayers();
   }, [team]);
@@ -99,7 +109,7 @@ export const Players = () => {
       <FlatList
         data={players}
         keyExtractor={(item) => item.name}
-        renderItem={({ item }) => <PlayCard name={item.name} onRemove={() => {}} />}
+        renderItem={({ item }) => <PlayCard name={item.name} onRemove={() => handleRemovePlayer(item.name)} />}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => <ListEmpty message="Que tal adicionar um novo usuário a esse time ?" />}
         contentContainerStyle={[{ paddingBottom: 100 }, players.length === 0 && { flex: 1 }]}
