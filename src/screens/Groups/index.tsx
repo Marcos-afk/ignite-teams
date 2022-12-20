@@ -10,8 +10,10 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import * as Styled from './styles';
 import { findAllGroups } from '@storage/group/findAllGroups';
 import { AppError } from '@utils/AppError';
+import { Loading } from '@components/Loading';
 
 export const Groups = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [groups, setGroups] = useState<string[]>([]);
   const { navigate } = useNavigation();
 
@@ -25,6 +27,7 @@ export const Groups = () => {
 
   const getGroups = async () => {
     try {
+      setIsLoading(true);
       const storage = await findAllGroups();
       setGroups(storage);
     } catch (error) {
@@ -33,6 +36,8 @@ export const Groups = () => {
       } else {
         Alert.alert('Erro ao buscar grupos', 'Não foi possível buscar grupos');
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -46,13 +51,17 @@ export const Groups = () => {
     <Styled.Container>
       <Header />
       <Highlight title="Turmas" subtitle="jogue com a sua turma" />
-      <FlatList
-        data={groups}
-        keyExtractor={(item) => item}
-        renderItem={({ item }) => <GroupCard title={item} onPress={() => handleOpenGroup(item)} />}
-        contentContainerStyle={groups.length === 0 && { flex: 1 }}
-        ListEmptyComponent={() => <ListEmpty message="Que tal cadastrar uma turma ?" />}
-      />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <FlatList
+          data={groups}
+          keyExtractor={(item) => item}
+          renderItem={({ item }) => <GroupCard title={item} onPress={() => handleOpenGroup(item)} />}
+          contentContainerStyle={groups.length === 0 && { flex: 1 }}
+          ListEmptyComponent={() => <ListEmpty message="Que tal cadastrar uma turma ?" />}
+        />
+      )}
       <Button title="Criar nova turma" onPress={handleNewGroup} />
     </Styled.Container>
   );

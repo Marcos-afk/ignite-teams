@@ -18,8 +18,10 @@ import { findAllPlayersByGroupAndTeam } from '@storage/players/findAllPlayersByG
 import { PlayerStorageDto } from '@storage/players/PlayerStorageDto';
 import { deletePlayerByGroup } from '@storage/players/deletePlayerByGroup';
 import { removeGroupByName } from '@storage/group/removeGroupByName';
+import { Loading } from '@components/Loading';
 
 export const Players = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [team, setTeam] = useState('Time A');
   const [players, setPlayers] = useState<PlayerStorageDto[]>([]);
   const [player, setPlayer] = useState('');
@@ -54,6 +56,7 @@ export const Players = () => {
 
   const getPlayers = async () => {
     try {
+      setIsLoading(true);
       const storage = await findAllPlayersByGroupAndTeam(group, team);
       setPlayers(storage);
     } catch (error) {
@@ -62,6 +65,8 @@ export const Players = () => {
       } else {
         Alert.alert('Erro ao buscar jogadores', 'Não foi possível buscar jogadores');
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -130,14 +135,18 @@ export const Players = () => {
         <Styled.NumberOfPlayers>{players.length}</Styled.NumberOfPlayers>
       </Styled.HeaderList>
 
-      <FlatList
-        data={players}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => <PlayCard name={item.name} onRemove={() => handleRemovePlayer(item.name)} />}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={() => <ListEmpty message="Que tal adicionar um novo usuário a esse time ?" />}
-        contentContainerStyle={[{ paddingBottom: 100 }, players.length === 0 && { flex: 1 }]}
-      />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <FlatList
+          data={players}
+          keyExtractor={(item) => item.name}
+          renderItem={({ item }) => <PlayCard name={item.name} onRemove={() => handleRemovePlayer(item.name)} />}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => <ListEmpty message="Que tal adicionar um novo usuário a esse time ?" />}
+          contentContainerStyle={[{ paddingBottom: 100 }, players.length === 0 && { flex: 1 }]}
+        />
+      )}
 
       <Button title="Remover turma" type="SECONDARY" onPress={handleRemoveGroup} />
     </Styled.Container>
