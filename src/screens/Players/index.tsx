@@ -1,5 +1,5 @@
-import { Alert } from 'react-native';
-import { useEffect, useState } from 'react';
+import { Alert, TextInput } from 'react-native';
+import { useEffect, useState, useRef } from 'react';
 import { ButtonIcon } from '@components/ButtonIcon';
 import { Filter } from '@components/Filter/indext';
 import { Header } from '@components/Header';
@@ -23,6 +23,7 @@ export const Players = () => {
   const [player, setPlayer] = useState('');
   const route = useRoute();
   const { group } = route.params as RouteParams;
+  const newPlayerRef = useRef<TextInput>(null);
 
   const handleAddPlayer = async () => {
     if (player.trim().length === 0) {
@@ -36,6 +37,8 @@ export const Players = () => {
 
     try {
       await createPlayerByGroup(newPlayer, group);
+      newPlayerRef.current?.blur();
+      setPlayer('');
       await getPlayers();
     } catch (error) {
       if (error instanceof AppError) {
@@ -69,7 +72,15 @@ export const Players = () => {
       <Highlight title={group} subtitle="adicione a galera e separe os times" />
 
       <Styled.Form>
-        <Input placeholder="Nome do participante" autoCorrect={false} onChangeText={setPlayer} />
+        <Input
+          inputRef={newPlayerRef}
+          placeholder="Nome do participante"
+          autoCorrect={false}
+          value={player}
+          onChangeText={setPlayer}
+          onSubmitEditing={handleAddPlayer}
+          returnKeyType="done"
+        />
         <ButtonIcon icon="add" onPress={handleAddPlayer} />
       </Styled.Form>
 
